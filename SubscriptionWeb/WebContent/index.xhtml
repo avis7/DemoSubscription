@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<ui:composition template="Template.xhtml">
+		<ui:define name="content">
+			<div class="homepage">
+
+				<p:galleria panelWidth="600" panelHeight="313" showCaption="false" style="margin:0px auto; border: rgb(255,255,255);"
+					autoPlay="true" value="#{imageBean.indexList}" var="imageId" effect="slide" effectSpeed="850">
+					<p:graphicImage value="#{imageBean.image}" style="width:600px; height:280px; padding-top:25px;">
+						<f:param name="id" value="#{imageId}" />						
+					</p:graphicImage>
+				</p:galleria>
+			
+			<div class="about_company">
+			<div class="body">
+			<h2>#{msg.aboutCompanyHeader}</h2>
+			<p>#{msg.aboutCompanyBlock1} </p>
+			<p>#{msg.aboutCompanyBlock2}</p>
+			</div>
+			
+			</div>	
+			<div class="support">
+			<div class="body">
+			<h2>#{msg.customerCareHeader}</h2>
+			<p>#{msg.customerCareBlock1}</p>
+			<p>#{msg.customerCareBlock2}</p>
+			</div>
+			</div>
+			</div>
+			
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

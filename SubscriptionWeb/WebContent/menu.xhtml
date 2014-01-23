@@ -1,0 +1,41 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<div id="header-menu">
+		<div class="linkholder">
+			<ul class="dropdown-menu">
+				<li class=" "><span class="link"> <h:outputLink
+							value="#{request.contextPath}/index.xhtml">#{msg.home}</h:outputLink>
+				</span></li>
+				<li class="spacer"></li>
+				<li class=" "><span class="link"> <h:outputLink
+							value="#{request.contextPath}/edition.xhtml">#{msg.editions}</h:outputLink>
+				</span></li>
+				<li class="spacer"></li>
+				<li class=" "><span class="link"> <h:outputLink
+							value="#{request.contextPath}/company.xhtml">#{msg.about}</h:outputLink>
+				</span></li>
+				<li class="spacer"></li>
+				<li class=" "><span class="link"> <h:outputLink
+							id="cart_value" value="#{request.contextPath}/cart.xhtml">
+							<h:outputLabel  value="#{msg.cart}" />
+							<h:outputLabel  value="(#{cartBean.preOrder.size()})"
+								rendered="#{cartBean.preOrder.size() != 0}" />
+							<p:graphicImage library="images" name="top_cart.png"
+								styleClass="cartimg" style="align:absmiddle" />
+						</h:outputLink>
+				</span></li>
+				<li class="spacer"></li>
+				<li class=" "><span class="link"> <h:outputLink
+							rendered="#{request.isUserInRole('user')}"
+							value="#{request.contextPath}/client/profile.xhtml">#{msg.profile}</h:outputLink>
+				</span></li>
+				<li class=" "><span class="link"> <h:outputLink
+							rendered="#{request.isUserInRole('admin')}"
+							value="#{request.contextPath}/admin/admin.xhtml">#{msg.adminTools}</h:outputLink>
+				</span></li>
+			</ul>
+		</div>
+	</div>
+</ui:composition>
+

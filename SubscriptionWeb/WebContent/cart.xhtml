@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<ui:composition template="Template.xhtml">
+		<ui:define name="content">
+			<h:form id="cart_table">
+				<p:dataTable value="#{cartBean.preOrder}" var="subscript" emptyMessage=" ">
+
+					<p:column>
+						<f:facet name="header">#{msg.image}</f:facet>
+						<p:graphicImage id="image" styleClass="cart_img"
+							value="#{cartBean.image}">
+							<f:param name="id"
+								value="#{cartBean.preOrder.indexOf(subscript)}" />
+						</p:graphicImage>
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.name}</f:facet>
+						<p:outputLabel styleClass="cart_text"
+							value="#{subscript.edition.name}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.price}</f:facet>
+						<p:outputLabel styleClass="cart_text"
+							value="#{subscript.edition.price}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.subscriptionDuration}</f:facet>
+						<p:outputLabel styleClass="cart_text"
+							value="#{util.getResourceText(subscript.duration.lable)}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.summary}</f:facet>
+						<p:outputLabel styleClass="cart_text" value="#{subscript.price}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.delete}</f:facet>
+						<p:commandButton style="margin: auto; display:block;"
+							action="#{cartBean.delete(subscript)}" value="#{msg.delete}"
+							ajax="@form" />
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+			<p:spacer style="width:100%" height="10" />
+			<p:outputLabel
+				style="float:right; display:block; font-size: 14px; color: red;"
+				value="#{msg.loginToContinue}"
+				rendered="#{not request.isUserInRole('user')}" />
+			<p:spacer style="width:100%" height="5"
+				rendered="#{not request.isUserInRole('user')}" />
+			<br />
+			<div class="cart_total">
+				<p:outputLabel style="font-size: 19px;" value="#{msg.totalPrice}: " />
+				<p:outputLabel id="price_label" style="display:block; font-size: 19px;"
+					value="#{cartBean.total}" />
+				<p:commandButton
+					style="display:block; float:right; font-size: 12px; margin-top: 14px;"
+					disabled="#{(cartBean.preOrder.size()==0) || (not request.isUserInRole('user'))}"
+					value="#{msg.makeOrder}" onclick="w_dialog.show(); return false;" />
+			</div>
+			<p:dialog resizable="false" widgetVar="w_dialog" id="payment_dialog">
+				<f:facet name="header">#{msg.paymentOption}</f:facet>
+				<h:form>
+					<p>
+						<h:panelGrid styleClass="payment_grid" columns="2">
+
+							<p:outputLabel for="cardHolder" value="#{msg.cardHolder}* : " />
+							<p:inputText id="cardHolder" required="true"
+								value="#{cartBean.cardHolder}" />
+
+							<p:outputLabel for="expireDate" value="#{msg.expireDate}* : " />
+							<p:calendar navigator="true" styleClass="dob" label="expire date"
+								id="expireDate" required="true" pattern="MM/yy" size="5">
+								<f:convertDateTime pattern="MM/yy" />
+							</p:calendar>
+							<p:outputLabel for="cardNumber"
+								value="#{msg.cardNumber} (#{msg.firstSigns})* : " />
+							<p:inputMask mask="9999" id="cardNumber" size="4" type="number"
+								required="true" />
+							<p:outputLabel for="securityCode" value="#{msg.securityCode}* : " />
+							<p:inputMask mask="999" id="securityCode" size="4" type="number"
+								required="true" />
+						</h:panelGrid>
+						<p:commandButton value="#{msg.pay}" ajax="true" update="@form :cart_table :cart_value :price_label"
+							action="#{cartBean.doPayment()}" disabled="#{cartBean.preOrder.size() == 0}"/>
+						<p:messages id="paymentMessage" />
+					</p>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

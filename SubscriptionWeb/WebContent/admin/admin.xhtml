@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<ui:composition template="../Template.xhtml">
+		<ui:define name="content">
+			<p:tabMenu activeIndex="0">
+				<p:menuitem value="#{msg.siteContent}" url="/admin/admin.xhtml"
+					icon="ui-icon-document" />
+				<p:menuitem value="#{msg.userPayments}" url="/admin/client.xhtml"
+					icon="ui-icon-person" />
+
+			</p:tabMenu>
+			<p:spacer style="width:100%; height:15px; " />
+			<h:form enctype="multipart/form-data" id="imageUpload">
+				<p:fieldset collapsed="true" legend="#{msg.uploadMain}"
+					toggleable="true" toggleSpeed="500">
+					<p:fileUpload style="width:100%; font-size:120% !important;"
+						multiple="true"
+						fileUploadListener="#{fileUploadController.handleFileUpload}"
+						mode="advanced" dragDropSupport="true"
+						update="messages :imageForm:imageTable" sizeLimit="10000000"
+						allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+						action="#{imageBean.init()}" />
+					<p:growl id="messages" showDetail="true" sticky="true" />
+				</p:fieldset>
+			</h:form>
+
+			<h:form id="imageForm">
+				<p:fieldset collapsed="true" legend="#{msg.deleteImage}"
+					toggleable="true" toggleSpeed="500">
+					<p:dataTable id="imageTable" var="imageId" style="width: 30%"
+						styleClass="edition_grid" value="#{imageBean.indexList}"
+						lazy="false" rows="20" paginator="true"
+						paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:column>
+							<p:graphicImage value="#{imageBean.image}"
+								style="width:160x; height:90px;">
+								<f:param name="id" value="#{imageId}" />
+							</p:graphicImage>
+						</p:column>
+						<p:column style="font-size:14px;">
+							<p:commandButton value="#{msg.delete}"
+								action="#{imageBean.deleteImage(imageId)}"
+								update="imageTable :imageUpload:messages" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</h:form>
+
+			<div class="registration">
+				<h:form enctype="multipart/form-data">
+				<p:growl id="growl" />
+					<p:fieldset collapsed="true" legend="#{msg.addEdition}"
+						toggleable="true" toggleSpeed="500">
+						<h:panelGrid columns="2" style="font-size:14px !important;">
+							<p:outputLabel value="#{msg.editionName}: *" />
+							<p:inputText styleClass="input" style="width:120%" requiredMessage="#{msg.requiredEditionName}"
+								value="#{adminBean.newEdition.name}" id="editionName" required="true" />
+							<p:message for="editionName"  />
+						</h:panelGrid>
+						<h:panelGrid columns="3" style="font-size:14px !important;">
+							<p:outputLabel value="#{msg.price}: *" />
+							<p:outputLabel value="#{msg.periodicity}: *" />
+							<p:outputLabel value="#{msg.type}: *" />
+							<p:inputText id="price" style="width:70%"
+							converterMessage="#{msg.converterEditionPrice}"
+							validatorMessage="#{msg.validatorEditionPrice}"
+							required="true" requiredMessage="#{msg.requiredEditionPrice}"
+								value="#{adminBean.newEdition.price}" converter="javax.faces.BigDecimal" >
+								<f:validateDoubleRange minimum="0"/>
+								</p:inputText>
+
+							<p:selectOneMenu id="period" value="#{adminBean.newEdition.period}"
+								required="true">
+								<f:selectItems value="#{editionBean.periodValues}" />
+							</p:selectOneMenu>
+							<p:selectOneMenu id="types" value="#{adminBean.type}"
+								required="true">
+								<f:selectItems value="#{adminBean.typeValues}" />
+							</p:selectOneMenu>
+							<p:message for="price" />
+							<p:message for="period" />
+							<p:message for="types" />
+
+						</h:panelGrid>
+
+						<h:panelGrid columns="2" style="font-size:14px !important;">
+							<f:facet name="header">
+								<p:outputLabel value="#{msg.titlePage}:" />
+							</f:facet>
+							<p:graphicImage id="avatar" style="width:136px; height:192px;"
+								value="#{adminBean.showImage()}" />
+
+							<p:fileUpload fileUploadListener="#{adminBean.handleFileUpload}"
+								mode="advanced" auto="true" update="avatar" sizeLimit="10000000"
+								allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+						</h:panelGrid>
+						<h:panelGrid columns="1"
+							style="width:86%; font-size:14px !important;">
+							<p:outputLabel for="descriptionUA" value="#{msg.descriptionUA}: " />
+							<p:inputTextarea id="descriptionUA" style="width:90%" rows="2"
+								 value="#{adminBean.newEdition.descriptionUA}" />
+							<p:outputLabel for="descriptionEN" value="#{msg.descriptionEN}: " />
+							<p:inputTextarea id="descriptionEN" style="width:90%" rows="2"
+								 value="#{adminBean.newEdition.descriptionEN}" />
+							<p:commandButton value="#{msg.addEdition}"
+								action="#{adminBean.addEdition()}" update="@form" />
+						</h:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

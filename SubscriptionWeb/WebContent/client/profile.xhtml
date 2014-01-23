@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../Template.xhtml">
+	<ui:define name="content">
+		<div class="client_info">
+			<p:graphicImage id="avatar" style="width:192px; height:192px;"
+				value="#{profileBean.showImage()}" />
+			<p:outputLabel styleClass="head_text">
+
+				<h2>#{profileBean.currentUser.login}</h2>
+
+			</p:outputLabel>
+			<p:separator />
+		</div>
+		<div class="client_content">
+			<p:tabMenu activeIndex="0">
+				<p:menuitem value="#{msg.myProf}" url="#" icon="ui-icon-person" />
+				<p:menuitem value="#{msg.subscriptions}"
+					url="/client/subscription.xhtml" icon="ui-icon-star" />
+				<p:menuitem value="#{msg.payments}" url="/client/payment.xhtml"
+					icon="ui-icon-document" />
+			</p:tabMenu>
+
+
+			<h:form id="user_info">
+				<h:panelGrid columns="3" styleClass="profile"
+					columnClasses=" , user_grid, ">
+					<h:outputLabel style="font-weight:bold;" for="fname"
+						value="#{msg.fname}: " />
+					<h:outputLabel for="fname"
+						value="#{profileBean.currentUser.firstName}"
+						rendered="#{not profileBean.editable}" />
+					<p:inputText styleClass="input" label="First Name" id="fname"
+						required="true" requiredMessage="#{msg.requiredRegistrationFname}"
+						value="#{profileBean.currentUser.firstName}"
+						rendered="#{profileBean.editable}" />
+					<p:message for="fname" />
+					<h:outputLabel style="font-weight:bold;" for="lname"
+						value="#{msg.lname}:" />
+					<h:outputLabel for="lname"
+						value="#{profileBean.currentUser.lastName}"
+						rendered="#{not profileBean.editable}" />
+					<p:inputText styleClass="input" label="Last Name" id="lname"
+						requiredMessage="#{msg.requiredRegistrationLname}"
+						value="#{profileBean.currentUser.lastName}"
+						rendered="#{profileBean.editable}" required="true" />
+					<p:message for="lname" />
+					<h:outputLabel style="font-weight:bold;" for="dob"
+						value="#{msg.dob}:" />
+					<h:outputLabel for="dob" value="#{profileBean.currentUser.dob}"
+						rendered="#{not profileBean.editable}">
+						<f:convertDateTime pattern="dd.MM.yy" />
+					</h:outputLabel>
+					<p:calendar styleClass="dob" label="Date of Birth" id="dob"
+						requiredMessage="#{msg.requiredRegistrationDob}"
+						converterMessage="#{msg.validatorRegistrationDobConverter}"
+						validator="#{registrationBean.validateDob}"
+						validatorMessage="#{msg.validatorRegistrationDob}"
+						value="#{profileBean.currentUser.dob}" required="true"
+						rendered="#{profileBean.editable}" pattern="dd.MM.yy">
+						<f:convertDateTime pattern="dd.MM.yy" />
+					</p:calendar>
+					<p:message for="dob" />
+					<h:outputLabel style="font-weight:bold;" for="radio"
+						value="#{msg.gender}:" />
+					<h:outputLabel for="radio"
+						value="#{profileBean.currentUser.gender}"
+						rendered="#{not profileBean.editable}" />
+					<p:selectOneRadio columns="2" label="#{msg.gender}"
+						requiredMessage="#{msg.requiredRegistrationGender}" id="radio"
+						value="#{profileBean.currentUser.gender}"
+						rendered="#{profileBean.editable}" required="true">
+						<f:selectItem itemLabel="#{msg.male}" itemValue="male" />
+						<f:selectItem itemLabel="#{msg.female}" itemValue="female" />
+					</p:selectOneRadio>
+					<p:message for="radio" />
+					<h:outputLabel style="font-weight:bold;" for="email"
+						value="#{msg.email}:" />
+					<h:outputLabel for="email" value="#{profileBean.currentUser.email}"
+						rendered="#{not profileBean.editable}" />
+					<p:inputText styleClass="input" label="Email Address" id="email"
+						requiredMessage="#{msg.requiredRegistrationEmail}"
+						validatorMessage="#{msg.validatorRegistrationEmail}"
+						value="#{profileBean.currentUser.email}" required="true"
+						rendered="#{profileBean.editable}">
+						<f:validateRegex
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</p:inputText>
+					<p:message for="email" />
+					<h:outputLabel style="font-weight:bold;" for="address"
+						value="#{msg.delivPlace}:" />
+					<h:outputLabel for="address" rendered="#{not profileBean.editable}"
+						value="#{profileBean.currentUser.address}" />
+					<p:inputTextarea id="address" rows="2" styleClass="input"
+						requiredMessage="#{msg.requiredRegistrationDelivery}"
+						required="true" rendered="#{profileBean.editable}"
+						value="#{profileBean.currentUser.address}" />
+					<p:message for="address" />
+					<p:commandButton value="#{msg.edit}"
+						rendered="#{not profileBean.editable}" ajax="false"
+						action="#{profileBean.setEditable(true)}" />					
+					<p:outputLabel value="#{msg.changePassword}:"
+					rendered="#{profileBean.editable}" style="font-weight:bold;"/>
+					<p:outputLabel value=" "/>
+					<p:outputLabel value=" "/>
+					<h:outputLabel for="oldPassword" value="#{msg.oldPassword}"
+						rendered="#{profileBean.editable}" style="font-weight:bold;" />
+					<p:password styleClass="input" label="#{msg.oldPassword}"
+						id="oldPassword" value="#{profileBean.oldPassword}" validator="#{profileBean.validateOldPassword}"
+						validatorMessage="#{msg.validatorUserOldPassword}"
+						rendered="#{profileBean.editable}" />
+					<p:message for="oldPassword" rendered="#{profileBean.editable}" />
+					<h:outputLabel for="pwd1" value="#{msg.password}:"
+						rendered="#{profileBean.editable}" style="font-weight:bold;" />
+					<p:password styleClass="input" id="pwd1"
+						value="#{profileBean.newPassword}" match="pwd2" label="Password"
+						rendered="#{profileBean.editable}" feedback="true"
+						promptLabel="#{msg.promptLabel}" weakLabel="#{msg.weakLabel}"
+						goodLabel="#{msg.goodLabel}" strongLabel="#{msg.strongLabel}" />
+					<p:message for="pwd1" rendered="#{profileBean.editable}" />
+					<h:outputLabel for="pwd2" value="#{msg.repPassword}:" style="font-weight:bold;"
+						rendered="#{profileBean.editable}" />
+					<p:password styleClass="input" id="pwd2"
+						rendered="#{profileBean.editable}"
+						value="#{profileBean.newPassword}" label="confirmation password" />
+					<p:message for="pwd2" rendered="#{profileBean.editable}" />
+					<p:commandButton value="#{msg.save}"
+						rendered="#{profileBean.editable}" ajax="false"
+						action="#{profileBean.save()}" />
+					<p:commandButton value="#{msg.cancel}"
+						rendered="#{profileBean.editable}" ajax="true" process="@this"
+						update="user_info" action="#{profileBean.setEditable(false)}" />
+				</h:panelGrid>
+			</h:form>
+		</div>
+
+
+
+	</ui:define>
+</ui:composition>
+</html>

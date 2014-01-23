@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="Template.xhtml">
+	<ui:define name="content">
+		<div class="registration">
+			<h:form enctype="multipart/form-data">
+				<!-- 				<p:growl id="growl" showDetail="true" sticky="true" /> -->
+				<h:panelGrid styleClass="personal_grid" columns="2" style="width:86%;">
+					<f:facet name="header">
+						<h:outputLabel styleClass="head_text" value="#{msg.persInf}:" />
+					</f:facet>
+					<h:outputLabel for="fname" value="#{msg.fname}: *" />
+					<h:outputLabel for="lname" value="#{msg.lname}: *" />
+					<p:inputText  styleClass="input" requiredMessage="#{msg.requiredRegistrationFname}" label="First Name" id="fname"
+						value="#{registrationBean.firstName}" required="true" />
+					<p:inputText styleClass="input" label="Last Name" id="lname"
+					requiredMessage="#{msg.requiredRegistrationLname}"
+						value="#{registrationBean.lastName}" required="true" />
+					<p:message for="fname" />
+					<p:message for="lname" />
+					<h:outputLabel for="dob" value="#{msg.dob} #{msg.dobFormat}: *" />
+					<h:outputLabel for="gender" value="#{msg.gender}: *" />
+					<p:calendar styleClass="dob" label="Date of Birth" id="dob"
+					requiredMessage="#{msg.requiredRegistrationDob}" converterMessage="#{msg.validatorRegistrationDobConverter}"
+					validator="#{registrationBean.validateDob}" validatorMessage="#{msg.validatorRegistrationDob}"
+						value="#{registrationBean.dob}" required="true" pattern="dd.MM.yy">
+						<f:convertDateTime pattern="dd.MM.yy" />
+					</p:calendar>
+					<p:selectOneRadio styleClass="personal_grid_gender" columns="2" label="Gender" id="gender"
+						value="#{registrationBean.gender}" required="true"
+						requiredMessage="#{msg.requiredRegistrationGender}">
+						<f:selectItem itemLabel="#{msg.male}" itemValue="male" />
+						<f:selectItem itemLabel="#{msg.female}" itemValue="female" />
+					</p:selectOneRadio>
+					<p:message for="dob" />
+					<p:message for="gender" />
+
+				</h:panelGrid>
+				<h:panelGrid columns="2" style="width:86%;">
+					<f:facet name="header">
+						<h:outputLabel styleClass="head_text" value="#{msg.accInf}:" />
+					</f:facet>
+					<h:outputLabel for="uname" value="#{msg.uname}: *" />
+					<h:outputLabel for="email" value="#{msg.email}: *" />
+					<p:inputText styleClass="input" label="Username" id="uname"
+					requiredMessage="#{msg.requiredRegistrationUsername}"
+						value="#{registrationBean.userName}" validator="#{registrationBean.loginCheck}" required="true" />
+					<p:inputText styleClass="input" label="Email Address" id="email"
+					validatorMessage="#{msg.validatorRegistrationEmail}" requiredMessage="#{msg.requiredRegistrationEmail}"
+						value="#{registrationBean.email}" required="true">
+						<f:validateRegex 
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</p:inputText>
+					<p:message for="uname" />
+					<p:message for="email" />
+					<h:outputLabel for="pwd1" value="#{msg.password}: *" />
+					<h:outputLabel for="pwd2" value="#{msg.repPassword}: *" />
+					<p:password styleClass="input" id="pwd1"
+					requiredMessage="#{msg.requiredRegistrationPassword}"
+						value="#{registrationBean.password}" match="pwd2" label="Password"
+						required="true" feedback="true" promptLabel="#{msg.promptLabel}"
+						weakLabel="#{msg.weakLabel}" goodLabel="#{msg.goodLabel}"
+						strongLabel="#{msg.strongLabel}" />
+					<p:password styleClass="input" id="pwd2"
+						value="#{registrationBean.password}" label="confiramtion password"
+						requiredMessage="#{msg.requiredRegistrationPassword}"
+						required="true" />
+					<p:message for="pwd1" />
+					<p:message for="pwd2" />
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+				<f:facet name="header"><h:outputLabel value="#{msg.avatar}:" /></f:facet>
+					<p:graphicImage id="avatar" style="width:192px; height:192px;"
+						value="#{registrationBean.showImage()}" />
+
+					<p:fileUpload
+						fileUploadListener="#{registrationBean.handleFileUpload}"
+						mode="advanced" auto="true" update="avatar" sizeLimit="10000000"
+						allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+				</h:panelGrid>
+				<h:panelGrid columns="1" style="width:86%;">
+					<f:facet name="header">
+						<h:outputLabel styleClass="head_text" value="#{msg.delivPlace}:" />
+					</f:facet>
+					<h:outputLabel for="address" value="#{msg.address}: *" />
+					<p:inputTextarea id="address" style="width:90%" rows="2"
+					requiredMessage="#{msg.requiredRegistrationDelivery}"
+						required="true" value="#{registrationBean.address}" />
+					<p:message for="address" />
+				</h:panelGrid>
+
+				<p:commandButton value="#{msg.createAcc}" disabled="#{request.isUserInRole('admin') || request.isUserInRole('user')}"
+					action="#{registrationBean.addConfirmedUser()}" ajax="false" />
+
+
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Final Project</title>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="dropdown.css" />
+
+</h:head>
+<h:body>
+	<f:view locale="#{language.currentLocale}"></f:view>
+	<div id="top">
+		<ui:insert name="header">
+			<ui:include src="header.xhtml" />
+		</ui:insert>
+	</div>
+	<div id="menu">
+		<ui:insert name="menu">
+			<ui:include src="menu.xhtml" />
+		</ui:insert>
+	</div>
+	<hr />
+	<div class="spacer" />
+	<div id="middle">
+		<div id="middle_content">
+			<ui:insert name="content" />
+		</div>
+	</div>
+	<hr />
+	<div class="spacer" />
+	<div id="footer">
+		<ui:insert name="footer">
+			<ui:include src="footer.xhtml" />
+		</ui:insert>
+	</div>
+
+</h:body>
+</html>

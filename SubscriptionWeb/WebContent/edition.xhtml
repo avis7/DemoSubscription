@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="Template.xhtml">
+	<ui:define name="content">
+		<p:tabView value="#{editionBean.types}" var="type" effect="blind"
+			style="border:none;" effectDuration="normal">
+			<p:tab title="#{type}">
+				<h:form>
+					<p:dataTable paginatorAlwaysVisible="false" id="editionTable"
+						styleClass="edition_grid" value="#{editionBean.getList(type)}"
+						var="edition" paginator="true" rows="10" lazy="false"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:column>
+							<!-- 							 -->
+							<p:graphicImage id="image" style="width:100px; height:135px;"
+								value="#{editionBean.image}">
+								<f:param name="id" value="#{edition.image.id}" />
+							</p:graphicImage>
+							<p:panel id="itembox" style="font-size: 12px !important;">
+								<div class="edition_content">
+									<h:outputLabel rendered="#{not editionBean.editable}">
+										<h2>#{edition.name}</h2>
+									</h:outputLabel>
+									<p:inputText id="editionName"
+										rendered="#{editionBean.editable}" required="true"
+										requiredMessage="#{msg.requiredEditionName}"
+										value="#{editionBean.currentEdition.name}" />
+									<p:separator />
+									<div class="item_box">
+
+										<h:outputLabel styleClass="label" value="#{msg.price}:" />
+										<h:outputLabel styleClass="item"
+											rendered="#{not editionBean.editable}"
+											value="#{edition.price} #{msg.currency}" />
+										<p:inputText id="price" rendered="#{editionBean.editable}"
+											converter="javax.faces.BigDecimal"
+											requiredMessage="#{msg.requiredEditionPrice}"
+											converterMessage="#{msg.converterEditionPrice}"
+											validatorMessage="#{msg.validatorEditionPrice}"
+											value="#{editionBean.currentEdition.price}" required="true">
+											<f:validateDoubleRange minimum="0" />
+										</p:inputText>
+										<p:message for="price" />
+										<h:outputLabel styleClass="label" value="#{msg.periodicity}:" />
+										<h:outputLabel styleClass="item"
+											value="#{util.getResourceText(edition.period.lable)}"
+											rendered="#{not editionBean.editable}" />
+										<p:selectOneMenu label="#{msg.periodicity}" id="period"
+											value="#{editionBean.currentEdition.period}" required="true"
+											rendered="#{editionBean.editable}">
+											<f:selectItems value="#{editionBean.periodValues}" />
+										</p:selectOneMenu>
+										<h:outputLabel styleClass="label"
+											value="#{msg.subscriptionDuration}:"
+											rendered="#{not editionBean.editable}" />
+										<p:selectOneMenu label="Duration" id="duration"
+											value="#{editionBean.duration}" required="true"
+											rendered="#{not editionBean.editable}">
+											<f:selectItems value="#{editionBean.durationValues}" />
+										</p:selectOneMenu>
+										<p:commandButton style="display:block; margin-top: 5px;"
+											value="#{msg.addToCart}" ajax="true" update=":cart_value"
+											action="#{editionBean.makeOrder(edition)}"
+											rendered="#{not request.isUserInRole('admin')}" />
+										<div style="margin-top: 5px; display: block;">
+											<p:commandButton style="display:block;  float: left;"
+												value="#{msg.edit}" process="@this"
+												rendered="#{not ((not request.isUserInRole('admin')) || editionBean.editable) }"
+												action="#{editionBean.changeEdition(edition)}"
+												update="itembox" />
+											<p:commandButton style="margin-left: 5px;"
+												value="#{msg.delete}" process="@this"
+												rendered="#{not ((not request.isUserInRole('admin')) || editionBean.editable) }"
+												action="#{editionBean.delete(edition)}"
+												update="editionTable" />
+
+											<p:commandButton process="@this" value="#{msg.cancel}"
+												rendered="#{not ((not request.isUserInRole('admin')) || (not editionBean.editable)) }"
+												action="#{editionBean.setEditable(false)}" update="itembox" />
+											<p:commandButton style="margin-left: 5px;"
+												value="#{msg.save}" process="@this itembox"
+												rendered="#{not ((not request.isUserInRole('admin')) || (not editionBean.editable)) }"
+												action="#{editionBean.updateEdition()}" update="itembox" />
+										</div>
+									</div>
+
+									<div class="item_box_description">
+										<h:outputLabel styleClass="label" value="#{msg.description}:"
+											rendered="#{not editionBean.editable}" />
+											<p>
+										
+											</p>
+										<p:outputLabel styleClass="item"
+											value="#{edition.getDescription(msg.currentLocale)}"
+											rendered="#{not editionBean.editable}" >
+											</p:outputLabel>
+										<h:outputLabel styleClass="label"
+											value="#{msg.descriptionUA}:"
+											rendered="#{editionBean.editable}" />
+										<p:inputTextarea id="descriptionUA" rows="2"
+											styleClass="input" style="width: 400px; margin-top: 2px;"
+											rendered="#{editionBean.editable}"
+											value="#{editionBean.currentEdition.descriptionUA}" />
+										<h:outputLabel styleClass="label"
+											value="#{msg.descriptionEN}:"
+											rendered="#{editionBean.editable}" />
+										<p:inputTextarea id="descriptionEN" rows="2"
+											styleClass="input" style="width: 400px; margin-top: 2px;"
+											rendered="#{editionBean.editable}"
+											value="#{editionBean.currentEdition.descriptionEN}" />
+
+
+									</div>
+
+								</div>
+							</p:panel>
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</p:tab>
+		</p:tabView>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,73 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<div id="top_content">
+		<p:growl id="growl" showDetail="true" sticky="true" globalOnly="true" life="500"/>
+		<div class="logo">
+			<p:graphicImage library="images" name="JavaPowered.png" />
+		</div>
+		<div class="stuff">
+			<h:outputLink
+				value="https://plus.google.com/u/0/108281401870785509456/posts">
+				<p:graphicImage styleClass="social" library="images"
+					name="google_plus.png" />
+			</h:outputLink>
+			<h:outputLink value="https://www.facebook.com/avis2701">
+				<p:graphicImage styleClass="social" library="images"
+					name="facebook.png" />
+			</h:outputLink>
+			<h:outputLink value="https://vk.com/avis7">
+				<p:graphicImage styleClass="social" library="images"
+					name="vkontakte.png" />
+			</h:outputLink>
+			<div class="language">
+				<h:form>
+					<h:selectOneMenu style="margin-top: 8px;" styleClass="dd2" value="#{language.localeCode}"
+						onchange="submit()"
+						valueChangeListener="#{language.countryLocaleCodeChanged}">
+						<f:selectItems value="#{language.countriesInMap}" />
+					</h:selectOneMenu>
+				</h:form>
+			</div>
+		</div>
+		<div class="loginbar">
+			<h:form>
+				<p:outputLabel rendered="#{empty request.remoteUser}">
+					<h2>
+						<p:outputLabel />
+						#{msg.loginInvitation}
+					</h2>
+				</p:outputLabel>
+				<p:outputLabel rendered="#{not empty request.remoteUser}">
+					<h2>
+						<p:outputLabel />
+						#{msg.welcomeBack}, #{loginBean.authentificateUser.firstName}
+					</h2>
+				</p:outputLabel>
+
+				<div class="topform">
+					<h:form>
+						<p:commandButton styleClass="topbutton" value="#{msg.register}"
+							action="/registration"
+							rendered="#{empty request.remoteUser}" ajax="false" />
+						<p:commandButton styleClass="topbutton" value="#{msg.logInSep}"
+							actionListener="#{loginBean.login}"
+							rendered="#{empty request.remoteUser}" ajax="false" />
+						<p:password id="password" label="password" styleClass="input"
+							value="#{loginBean.password}"
+							rendered="#{empty request.remoteUser}" />
+						<p:watermark for="password" value="#{msg.password}" />
+						<p:inputText id="login" label="login" styleClass="input"
+							value="#{loginBean.username}"
+							rendered="#{empty request.remoteUser}" />
+						<p:watermark for="login" value="#{msg.login}" />
+						<p:commandButton styleClass="topbutton" value="#{msg.logOut}" ajax="true"
+							update="@form" actionListener="#{loginBean.logout}"
+							rendered="#{not empty request.remoteUser}" />
+					</h:form>
+				</div>
+			</h:form>
+		</div>
+	</div>
+</ui:composition>

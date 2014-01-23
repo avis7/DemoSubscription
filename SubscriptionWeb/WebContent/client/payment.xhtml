@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../Template.xhtml">
+	<ui:define name="content">
+		<div class="client_info">
+				<p:outputLabel styleClass="head_text">
+					<p:graphicImage id="avatar" style="width:192px; height:192px;"
+						value="#{profileBean.showImage()}" />
+					<h2>#{profileBean.currentUser.login}</h2>
+
+				</p:outputLabel>
+				<p:separator />
+			</div>
+			<div class="client_content">
+				<p:tabMenu activeIndex="2">
+					<p:menuitem value="#{msg.myProf}" url="/client/profile.xhtml"
+						icon="ui-icon-person" />
+					<p:menuitem value="#{msg.subscriptions}"
+						url="/client/subscription.xhtml" icon="ui-icon-star" />
+					<p:menuitem value="#{msg.payments}" url="#" icon="ui-icon-document" />
+				</p:tabMenu>
+				<p:dataTable id="paymentsTable" var="payment"
+					value="#{profileBean.userPayments}" lazy="false" rows="5"
+					paginator="true" paginatorAlwaysVisible="false"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{msg.subscriptions}" />
+							<p:column headerText="#{msg.duration}" />
+							<p:column headerText="#{msg.price}" />
+						</p:row>
+					</p:columnGroup>
+					
+						<p:subTable var="subscription" value="#{payment.subscription}">
+							<f:facet name="header">
+								<p:outputLabel style="font-size: 12px"
+									value="#{msg.date}: #{payment.date}" />
+							</f:facet>
+							<p:column>
+								<p:outputLabel style="font-size: 12px"
+									value="#{subscription.edition.name}" />
+							</p:column>
+							<p:column>
+								<p:outputLabel style="font-size: 12px"
+									value="#{util.getResourceText(subscription.duration.lable)}" />
+							</p:column>
+							<p:column>
+								<p:outputLabel style="font-size: 12px"
+									value="#{subscription.price}" />
+							</p:column>
+							<p:columnGroup type="footer">
+								<p:row>
+									<p:column colspan="2" footerText="#{msg.totalPrice}: "
+										style=" font-size:13px; font-weight:bold;" />
+									<p:column footerText="#{payment.price}"
+										style=" font-size:13px; font-weight:bold;" />
+								</p:row>
+							</p:columnGroup>
+
+						</p:subTable>
+				
+				</p:dataTable>
+
+			</div>
+	</ui:define>
+</ui:composition>
+</html>

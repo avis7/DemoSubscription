@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="../Template.xhtml">
+	<ui:define name="content">
+<div class="client_info">
+	<p:outputLabel styleClass="head_text">
+	<p:graphicImage id="avatar" style="width:192px; height:192px;"
+						value="#{profileBean.showImage()}" />
+			<h2>#{profileBean.currentUser.login}</h2>
+			
+		</p:outputLabel>
+		<p:separator />
+		</div>
+	
+	<div class="client_content">
+	<p:tabMenu activeIndex="1">  
+	<p:menuitem value="#{msg.myProf}" url="/client/profile.xhtml" icon="ui-icon-person" />  
+    <p:menuitem value="#{msg.subscriptions}" url="#"   icon="ui-icon-star"/>  
+    <p:menuitem value="#{msg.payments}" url="/client/payment.xhtml" icon="ui-icon-document"/> 
+   </p:tabMenu >  
+   <p:dataTable id="paymentsTable" var="subscription" 
+					value="#{profileBean.userSubscriptions}" lazy="false" 
+					rows="20"
+					paginator="true" paginatorAlwaysVisible="false"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:column style="font-size: 12px">
+						<f:facet name="header" >
+						<p:outputLabel style="font-weight:bold;" value="#{msg.edition}"/>
+						</f:facet>
+						<p:outputLabel value="#{subscription.edition.name}"/>
+						</p:column >
+						<p:column style="font-size: 12px">
+						<f:facet name="header">
+						<p:outputLabel style="font-weight:bold;" value="#{msg.periodicity}"/>
+						</f:facet>
+						<p:outputLabel value="#{util.getResourceText(subscription.edition.period.lable)}"/>
+						</p:column>
+						<p:column style="font-size: 12px">
+						<f:facet name="header">
+						<p:outputLabel style="font-weight:bold;" value="#{msg.duration}"/>
+						</f:facet>
+						<p:outputLabel value="#{util.getResourceText(subscription.duration.lable)}"/>
+						</p:column>
+						<p:column style="font-size: 12px">
+						<f:facet name="header">
+						<p:outputLabel style="font-weight:bold;" value="#{msg.startDate}"/>
+						</f:facet>
+						<p:outputLabel value="#{subscription.startDate}"/>
+						</p:column>
+						<p:column style="font-size: 12px"> 
+						<f:facet name="header">
+						<p:outputLabel style="font-weight:bold;" value="#{msg.endDate}"/>
+						</f:facet>
+						<p:outputLabel value="#{subscription.endDate}"/>
+						</p:column>
+						<p:column style="font-size: 12px">
+						<f:facet name="header">
+						<p:outputLabel style="font-weight:bold;" value="#{msg.daysLeft}"/>
+						</f:facet>
+						<p:outputLabel value="#{profileBean.getDaysLeft(subscription)}"/>
+						</p:column>
+					
+					
+				</p:dataTable>
+   
+	</div>
+	</ui:define>
+	</ui:composition>
+</html>
